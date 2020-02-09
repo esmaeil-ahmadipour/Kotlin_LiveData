@@ -10,4 +10,7 @@ object RetrofitService {
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
+    //We Use An Object Of ApiService Interface To Create Retrofit Service And Then ,
+    //apiService Access To Method's Of ApiService Interface (Like: getNote)
+    val  apiService : ApiService = retrofit.create(ApiService::class.java)
 }

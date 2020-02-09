@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import ir.ea2.kotlin_livedata.AppConstants
 import ir.ea2.kotlin_livedata.DataUtil
 import ir.ea2.kotlin_livedata.R
-import ir.ea2.kotlin_livedata.data.model.Note
+import ir.ea2.kotlin_livedata.data.remote.model.Note
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ir.ea2.kotlin_livedata.AppConstants
 import ir.ea2.kotlin_livedata.R
-import ir.ea2.kotlin_livedata.data.model.Note
+import ir.ea2.kotlin_livedata.data.remote.model.Note
 import kotlinx.android.synthetic.main.item_layout.view.*
 
 

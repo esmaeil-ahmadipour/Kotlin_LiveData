@@ -1,7 +1,7 @@
 package ir.ea2.kotlin_livedata
 
-import ir.ea2.kotlin_livedata.data.model.Category
-import ir.ea2.kotlin_livedata.data.model.Note
+import ir.ea2.kotlin_livedata.data.remote.model.Category
+import ir.ea2.kotlin_livedata.data.remote.model.Note
 
 object DataUtil {
     fun getNotes(): List<Note> {
