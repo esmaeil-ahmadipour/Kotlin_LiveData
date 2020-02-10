@@ -1,5 +1,7 @@
 package ir.ea2.kotlin_livedata.data.repository
 
+import android.util.Log
+import ir.ea2.kotlin_livedata.AppConstants
 import ir.ea2.kotlin_livedata.data.remote.RetrofitService
 import ir.ea2.kotlin_livedata.data.remote.model.NoteResponse
 import retrofit2.Call
@@ -24,10 +26,14 @@ class AppRepository private constructor(){
             //Any Request Have Two State: RequestHasError Or RequestIsOk .
             //onFailure : RequestHasError And Detail's Available In Throwable Variable.
             override fun onFailure(call: Call<NoteResponse>, t: Throwable) {
+                Log.i(AppConstants.NETWORK_TEST , AppConstants.FAILED_MESSAGE)
 
             }
             //onResponse : RequestIsOk And Detail's Available In Response Variable.
             override fun onResponse(call: Call<NoteResponse>, response: Response<NoteResponse>) {
+                if(response.isSuccessful){
+                    Log.i(AppConstants.NETWORK_TEST , AppConstants.SUCCESSFUL_MESSAGE)
+                }
 
             }
         })

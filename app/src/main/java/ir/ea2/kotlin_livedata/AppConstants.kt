@@ -8,4 +8,6 @@ object AppConstants {
 
         const val NETWORK_TEST = "NETWORK_TEST"
         const val FAILED_MESSAGE = "Connection failed"
+        const val SUCCESSFUL_MESSAGE = "Connection is successfully"
+
 }

@@ -10,6 +10,7 @@ import ir.ea2.kotlin_livedata.AppConstants
 import ir.ea2.kotlin_livedata.DataUtil
 import ir.ea2.kotlin_livedata.R
 import ir.ea2.kotlin_livedata.data.remote.model.Note
+import ir.ea2.kotlin_livedata.data.repository.AppRepository
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +19,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        //Because We Not ViewModel Layer , Use AppRepository In Here .
+        AppRepository.getInstance().getNotes()
         setRecyclerView(DataUtil.getNotes())
     }
 
