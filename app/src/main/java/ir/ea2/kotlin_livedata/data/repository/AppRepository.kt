@@ -3,6 +3,7 @@ package ir.ea2.kotlin_livedata.data.repository
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import ir.ea2.kotlin_livedata.AppConstants
+import ir.ea2.kotlin_livedata.data.remote.Resource
 import ir.ea2.kotlin_livedata.data.remote.RetrofitService
 import ir.ea2.kotlin_livedata.data.remote.model.NoteResponse
 import retrofit2.Call
@@ -21,27 +22,37 @@ class AppRepository private constructor() {
         }
     }
 
-    fun getNotes(): MutableLiveData<NoteResponse> {
+    fun getNotes(): MutableLiveData<Resource<NoteResponse>> {
         //For Pass Result Of This Thread , Using ObserverPattern In LiveData.
         //Because Need Change Data , We Using MutableLiveData.
-        var responseResult: MutableLiveData<NoteResponse> = MutableLiveData()
+
+        var responseResult: MutableLiveData<Resource<NoteResponse>> = MutableLiveData()
+        //Set Default Value For : When Response Not Switched Between Failure Or Success.
+        responseResult.value=Resource.loading()
 
         //Method enqueue() : Use For Create Enqueue Of Request.After Any Callback Get Answer, GoTo Next Request.
         //For Create Request Using Callback interface and Implemented Method's.
+
         RetrofitService.apiService.getNote().enqueue(object : Callback<NoteResponse> {
 
             //Any Request Have Two State: RequestHasError Or RequestIsOk .
             //onFailure : RequestHasError And Detail's Available In Throwable Variable.
-            override fun onFailure(call: Call<NoteResponse>, t: Throwable) {
-                Log.i(AppConstants.NETWORK_TEST, AppConstants.FAILED_MESSAGE)
 
+            override fun onFailure(call: Call<NoteResponse>, t: Throwable) {
+
+                responseResult.value= Resource.error(AppConstants.FAILED_MESSAGE,null)
             }
 
             //onResponse : RequestIsOk And Detail's Available In Response Variable.
             override fun onResponse(call: Call<NoteResponse>, response: Response<NoteResponse>) {
                 if (response.isSuccessful) {
                     //Set Response Data To MutableLiveData Variable.
-                    responseResult.value = response.body()
+                    responseResult.value = Resource.success(response.body())
+                    Log.i(AppConstants.NETWORK_TEST,response.code().toString())
+                }else{
+                    //When Response Code isn't `200` .
+                    responseResult.value= Resource.error(AppConstants.ERROR_MESSAGE+response.code().toString(),null)
+
                 }
             }
         })

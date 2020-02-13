@@ -13,20 +13,34 @@ import ir.ea2.kotlin_livedata.DataUtil
 import ir.ea2.kotlin_livedata.R
 import ir.ea2.kotlin_livedata.data.remote.model.Note
 import ir.ea2.kotlin_livedata.data.repository.AppRepository
+import ir.ea2.kotlin_livedata.util.AppStatus
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var adapter: RecyclerAdapter
+    private var adapter: RecyclerAdapter? =null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //Because We Not ViewModel Layer , Use AppRepository In Here .
         AppRepository.getInstance().getNotes().observe(
+
             this@MainActivity,
             Observer {
-                //Set NoteResponse(Received From MutableLiveData) To RecyclerView
-                setRecyclerView(it.notes)
+                when(it.status){
+                    AppStatus.LOADING-> Log.i(AppConstants.NETWORK_TEST,AppConstants.LOADING_STATE)
+                    AppStatus.ERROR-> Log.i(AppConstants.NETWORK_TEST,it.message)
+                    AppStatus.SUCCESS-> {
+                        if(it.data?.notes !=null && it.data.notes.isNotEmpty()){
+                            if(adapter == null){
+                                Log.i(AppConstants.NETWORK_TEST,AppConstants.SUCCESSFUL_MESSAGE)
+                                //Set NoteResponse(Received From MutableLiveData) To RecyclerView
+                                setRecyclerView(it.data.notes)
+                            }
+                        }
+                    }
+                }
+
             })
     }
 
