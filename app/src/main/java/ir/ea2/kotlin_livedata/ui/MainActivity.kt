@@ -27,9 +27,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setRecyclerView(notes: List<Note>) {
-        mainRecyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = RecyclerAdapter(notes)
-        mainRecyclerView.adapter = adapter
+        if (adapter == null) {
+            mainRecyclerView.layoutManager = LinearLayoutManager(this)
+            adapter = RecyclerAdapter(notes.toMutableList())
+            mainRecyclerView.adapter = adapter
+        } else {
+            adapter?.refreshData(notes)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -59,37 +63,27 @@ class MainActivity : AppCompatActivity() {
                 Observer {
                     when (it.status) {
                         AppStatus.LOADING -> {
-                            progressBar.visibility = View.VISIBLE
-                            textView.visibility = View.INVISIBLE
-                            mainRecyclerView.visibility = View.INVISIBLE
+                            updateVisibility(View.VISIBLE, View.INVISIBLE, View.INVISIBLE)
                         }
                         AppStatus.ERROR -> {
                             textView.text = it.message
-                            progressBar.visibility = View.INVISIBLE
-                            textView.visibility = View.VISIBLE
-                            mainRecyclerView.visibility = View.INVISIBLE
+                            updateVisibility(View.INVISIBLE, View.VISIBLE, View.INVISIBLE)
                         }
                         AppStatus.SUCCESS -> {
-                            progressBar.visibility = View.INVISIBLE
-                            textView.visibility = View.INVISIBLE
-                            mainRecyclerView.visibility = View.VISIBLE
-                            if (it.data?.notes != null && it.data.notes.isNotEmpty()) {
-                                if (adapter == null) {
-                                    //Set NoteResponse(Received From MutableLiveData) To RecyclerView
-                                    setRecyclerView(it.data.notes)
-                                } else {
-                                    adapter?.refreshData(it.data.notes)
-                                }
-                            }
+                            updateVisibility(View.INVISIBLE, View.INVISIBLE, View.VISIBLE)
+                            setRecyclerView(it.data!!.notes)
                         }
                     }
-
                 })
         } else {
             textView.text = AppConstants.DISCONNECT_INTERNET_MESSAGE
-            progressBar.visibility = View.INVISIBLE
-            textView.visibility = View.VISIBLE
-            mainRecyclerView.visibility = View.INVISIBLE
+            updateVisibility(View.INVISIBLE, View.VISIBLE, View.INVISIBLE)
         }
+    }
+
+    private fun updateVisibility(pbVisibility: Int, tvVisibility: Int, rvVisibility: Int) {
+        progressBar.visibility = pbVisibility
+        textView.visibility = tvVisibility
+        mainRecyclerView.visibility = rvVisibility
     }
 }

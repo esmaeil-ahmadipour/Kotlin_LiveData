@@ -11,7 +11,7 @@ import ir.ea2.kotlin_livedata.data.remote.model.Note
 import kotlinx.android.synthetic.main.item_layout.view.*
 
 
-class RecyclerAdapter(var notes: List<Note>) : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
+class RecyclerAdapter(var notes: MutableList<Note>) : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false))
     }
@@ -43,8 +43,8 @@ class RecyclerAdapter(var notes: List<Note>) : RecyclerView.Adapter<RecyclerAdap
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     fun refreshData(notes:List<Note>){
-        this.notes.toMutableList().clear()
-        this.notes.toMutableList().addAll(notes)
+        this.notes.clear()
+        this.notes.addAll(notes)
         notifyDataSetChanged()
     }
 }

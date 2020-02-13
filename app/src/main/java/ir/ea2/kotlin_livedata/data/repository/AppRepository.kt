@@ -47,8 +47,13 @@ class AppRepository private constructor() {
             override fun onResponse(call: Call<NoteResponse>, response: Response<NoteResponse>) {
                 if (response.isSuccessful) {
                     //Set Response Data To MutableLiveData Variable.
-                    responseResult.value = Resource.success(response.body())
-                    Log.i(AppConstants.NETWORK_TEST,response.code().toString())
+                    if(response.body()?.notes==null){
+                        responseResult.value= Resource.error(AppConstants.DATA_ERROR_MESSAGE,null)
+                    }else{
+                        responseResult.value = Resource.success(response.body())
+                        Log.i(AppConstants.NETWORK_TEST,response.code().toString())
+                    }
+
                 }else{
                     //When Response Code isn't `200` .
                     responseResult.value= Resource.error(AppConstants.ERROR_MESSAGE+response.code().toString(),null)
