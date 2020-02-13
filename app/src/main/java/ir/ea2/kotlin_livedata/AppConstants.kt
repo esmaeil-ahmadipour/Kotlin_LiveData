@@ -11,4 +11,5 @@ object AppConstants {
         const val FAILED_MESSAGE = "Connection failed"
         const val SUCCESSFUL_MESSAGE = "Connection is successfully"
         const val ERROR_MESSAGE = "Error ! "
+        const val DISCONNECT_INTERNET_MESSAGE = "Internet Is Unavailable. "
 }

@@ -42,4 +42,9 @@ class RecyclerAdapter(var notes: List<Note>) : RecyclerView.Adapter<RecyclerAdap
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    fun refreshData(notes:List<Note>){
+        this.notes.toMutableList().clear()
+        this.notes.toMutableList().addAll(notes)
+        notifyDataSetChanged()
+    }
 }
