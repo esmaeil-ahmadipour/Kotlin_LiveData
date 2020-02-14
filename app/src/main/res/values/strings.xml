@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Kotlin_LiveData</string>
+    <string name="searchBar_hint_txt">Do SomeThings!</string>
 </resources>

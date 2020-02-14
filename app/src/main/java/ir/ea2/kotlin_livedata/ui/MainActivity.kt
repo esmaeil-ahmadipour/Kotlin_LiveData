@@ -2,10 +2,12 @@ package ir.ea2.kotlin_livedata.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import ir.ea2.kotlin_livedata.AppConstants
@@ -16,7 +18,7 @@ import ir.ea2.kotlin_livedata.data.repository.AppRepository
 import ir.ea2.kotlin_livedata.util.AppStatus
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     private var adapter: RecyclerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +40,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
+        val searchView = menu?.findItem(R.id.searchMenuItem)?.actionView as SearchView
+
+        searchView.apply {
+            isSubmitButtonEnabled = true
+            queryHint = resources.getString(R.string.searchBar_hint_txt)
+            setOnQueryTextListener(this@MainActivity)
+        }
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -85,5 +95,15 @@ class MainActivity : AppCompatActivity() {
         progressBar.visibility = pbVisibility
         textView.visibility = tvVisibility
         mainRecyclerView.visibility = rvVisibility
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        Log.i(AppConstants.NETWORK_TEST, query)
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        Log.i(AppConstants.NETWORK_TEST, newText)
+        return true
     }
 }
