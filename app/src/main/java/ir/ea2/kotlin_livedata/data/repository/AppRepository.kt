@@ -22,7 +22,7 @@ class AppRepository private constructor() {
         }
     }
 
-    fun getNotes(): MutableLiveData<Resource<NoteResponse>> {
+    fun getNotes(title:String): MutableLiveData<Resource<NoteResponse>> {
         //For Pass Result Of This Thread , Using ObserverPattern In LiveData.
         //Because Need Change Data , We Using MutableLiveData.
 
@@ -33,7 +33,7 @@ class AppRepository private constructor() {
         //Method enqueue() : Use For Create Enqueue Of Request.After Any Callback Get Answer, GoTo Next Request.
         //For Create Request Using Callback interface and Implemented Method's.
 
-        RetrofitService.apiService.getNote().enqueue(object : Callback<NoteResponse> {
+        RetrofitService.apiService.getNote(title).enqueue(object : Callback<NoteResponse> {
 
             //Any Request Have Two State: RequestHasError Or RequestIsOk .
             //onFailure : RequestHasError And Detail's Available In Throwable Variable.

@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //Because We Not ViewModel Layer , Use AppRepository In Here .
-        sendNotesRequest()
+        sendNotesRequest("")
     }
 
     private fun setRecyclerView(notes: List<Note>) {
@@ -59,15 +59,15 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                 startActivity(intent)
             }
             R.id.refreshMenuItem -> {
-                sendNotesRequest()
+                sendNotesRequest("")
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun sendNotesRequest() {
+    private fun sendNotesRequest(title:String) {
         if (NetworkUtil.isInternetAvailable(this)) {
-            AppRepository.getInstance().getNotes().observe(
+            AppRepository.getInstance().getNotes(title).observe(
 
                 this@MainActivity,
                 Observer {
@@ -99,11 +99,14 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         Log.i(AppConstants.NETWORK_TEST, query)
+        sendNotesRequest(query!!)
         return true
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
         Log.i(AppConstants.NETWORK_TEST, newText)
+        sendNotesRequest(newText!!)
+
         return true
     }
 }
