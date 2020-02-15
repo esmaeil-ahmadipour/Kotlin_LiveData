@@ -30,10 +30,12 @@ class AppRepository private constructor() {
         //Set Default Value For : When Response Not Switched Between Failure Or Success.
         responseResult.value=Resource.loading()
 
+        //Set Variable deviceSDKVersion For Send To Header Of Response.
+        val deviceSDKVersion:String = android.os.Build.VERSION.SDK_INT.toString()
+
         //Method enqueue() : Use For Create Enqueue Of Request.After Any Callback Get Answer, GoTo Next Request.
         //For Create Request Using Callback interface and Implemented Method's.
-
-        RetrofitService.apiService.getNote(title).enqueue(object : Callback<NoteResponse> {
+        RetrofitService.apiService.getNote(title,deviceSDKVersion).enqueue(object : Callback<NoteResponse> {
 
             //Any Request Have Two State: RequestHasError Or RequestIsOk .
             //onFailure : RequestHasError And Detail's Available In Throwable Variable.
