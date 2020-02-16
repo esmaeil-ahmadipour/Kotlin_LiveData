@@ -24,7 +24,7 @@ class RecyclerAdapter(var notes: MutableList<Note>) : RecyclerView.Adapter<Recyc
 
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, NoteActivity::class.java)
-            intent.putExtra(AppConstants.NOTE_KEY, notes[position])
+            intent.putExtra(AppConstants.NOTE_ID_KEY, notes[position].id)
             holder.itemView.context.startActivity(intent)
         }
 

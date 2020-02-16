@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import ir.ea2.kotlin_livedata.AppConstants
 import ir.ea2.kotlin_livedata.data.remote.Resource
 import ir.ea2.kotlin_livedata.data.remote.RetrofitService
+import ir.ea2.kotlin_livedata.data.remote.model.Note
 import ir.ea2.kotlin_livedata.data.remote.model.NoteResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -50,6 +51,35 @@ class AppRepository private constructor() {
                 if (response.isSuccessful) {
                     //Set Response Data To MutableLiveData Variable.
                     if(response.body()?.notes==null){
+                        responseResult.value= Resource.error(AppConstants.DATA_ERROR_MESSAGE,null)
+                    }else{
+                        responseResult.value = Resource.success(response.body())
+                        Log.i(AppConstants.NETWORK_TEST,response.code().toString())
+                    }
+
+                }else{
+                    //When Response Code isn't `200` .
+                    responseResult.value= Resource.error(AppConstants.ERROR_MESSAGE+response.code().toString(),null)
+
+                }
+            }
+        })
+        return responseResult
+    }
+
+    fun getNoteDetails(id:Long): MutableLiveData<Resource<Note>>{
+        var responseResult: MutableLiveData<Resource<Note>> = MutableLiveData()
+        responseResult.value=Resource.loading()
+
+        RetrofitService.apiService.getNoteDetail(id).enqueue(object:Callback<Note>{
+            override fun onFailure(call: Call<Note>, t: Throwable) {
+                responseResult.value= Resource.error(AppConstants.FAILED_MESSAGE,null)
+            }
+
+            override fun onResponse(call: Call<Note>, response: Response<Note>) {
+                if (response.isSuccessful) {
+                    //Set Response Data To MutableLiveData Variable.
+                    if(response.body()==null){
                         responseResult.value= Resource.error(AppConstants.DATA_ERROR_MESSAGE,null)
                     }else{
                         responseResult.value = Resource.success(response.body())

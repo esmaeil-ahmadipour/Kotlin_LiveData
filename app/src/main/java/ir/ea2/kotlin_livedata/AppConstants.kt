@@ -2,6 +2,7 @@ package ir.ea2.kotlin_livedata
 
 object AppConstants {
         const val NOTE_KEY = "NOTE"
+        const val NOTE_ID_KEY = "NOTE_ID"
         const val STATE_KEY = "STATE"
         const val CREATE_STATE = "CREATE"
         const val UPDATE_STATE = "UPDATE"

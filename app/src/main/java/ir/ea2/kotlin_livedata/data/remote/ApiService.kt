@@ -1,9 +1,11 @@
 package ir.ea2.kotlin_livedata.data.remote
 
+import ir.ea2.kotlin_livedata.data.remote.model.Note
 import ir.ea2.kotlin_livedata.data.remote.model.NoteResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -14,4 +16,7 @@ interface ApiService {
 
     @GET("note")
     fun getNote(@Query("title") title:String , @Header("deviceApiSdk") deviceApiSdk:String): Call<NoteResponse>
+
+    @GET("note/{id}")
+    fun getNoteDetail(@Path("id")id:Long):Call<Note>
 }
