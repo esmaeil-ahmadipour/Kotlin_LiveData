@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import ir.ea2.kotlin_livedata.AppConstants
 import ir.ea2.kotlin_livedata.data.remote.Resource
 import ir.ea2.kotlin_livedata.data.remote.RetrofitService
+import ir.ea2.kotlin_livedata.data.remote.model.CategoriesResponse
 import ir.ea2.kotlin_livedata.data.remote.model.Note
 import ir.ea2.kotlin_livedata.data.remote.model.NoteResponse
 import retrofit2.Call
@@ -90,6 +91,33 @@ class AppRepository private constructor() {
                     //When Response Code isn't `200` .
                     responseResult.value= Resource.error(AppConstants.ERROR_MESSAGE+response.code().toString(),null)
 
+                }
+            }
+        })
+        return responseResult
+    }
+
+    fun getCategories(): MutableLiveData<Resource<CategoriesResponse>> {
+        var responseResult: MutableLiveData<Resource<CategoriesResponse>> = MutableLiveData()
+        responseResult.value = Resource.loading()
+        RetrofitService.apiService.getCategories().enqueue(object : Callback<CategoriesResponse> {
+            override fun onFailure(call: Call<CategoriesResponse>, t: Throwable) {
+                responseResult.value= Resource.error(AppConstants.FAILED_MESSAGE,null)
+            }
+
+            override fun onResponse(
+                call: Call<CategoriesResponse>,
+                response: Response<CategoriesResponse>
+            ) {
+                if (response.isSuccessful) {
+                    if(response.body()?.categories==null){
+                        responseResult.value= Resource.error(AppConstants.DATA_ERROR_MESSAGE,null)
+                    }else{
+                        responseResult.value = Resource.success(response.body())
+                        Log.i(AppConstants.NETWORK_TEST,response.code().toString())
+                    }
+                }else{
+                    responseResult.value= Resource.error(AppConstants.ERROR_MESSAGE+response.code().toString(),null)
                 }
             }
         })

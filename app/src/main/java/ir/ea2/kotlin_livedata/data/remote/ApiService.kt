@@ -1,5 +1,6 @@
 package ir.ea2.kotlin_livedata.data.remote
 
+import ir.ea2.kotlin_livedata.data.remote.model.CategoriesResponse
 import ir.ea2.kotlin_livedata.data.remote.model.Note
 import ir.ea2.kotlin_livedata.data.remote.model.NoteResponse
 import retrofit2.Call
@@ -19,4 +20,8 @@ interface ApiService {
 
     @GET("note/{id}")
     fun getNoteDetail(@Path("id")id:Long):Call<Note>
+
+    @GET("category")
+    fun getCategories() : Call<CategoriesResponse>
+
 }

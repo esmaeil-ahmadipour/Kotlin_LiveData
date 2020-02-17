@@ -55,6 +55,7 @@ class NoteActivity : AppCompatActivity() {
             updateVisibility(View.INVISIBLE, View.VISIBLE, View.INVISIBLE)
         }
     }
+
     private fun updateVisibility(pbVisibility: Int, tvVisibility: Int, consVisibility: Int) {
         progressBar.visibility = pbVisibility
         textView.visibility = tvVisibility
