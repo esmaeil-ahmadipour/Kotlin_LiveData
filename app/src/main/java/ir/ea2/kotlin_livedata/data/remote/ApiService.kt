@@ -4,10 +4,7 @@ import ir.ea2.kotlin_livedata.data.remote.model.CategoriesResponse
 import ir.ea2.kotlin_livedata.data.remote.model.Note
 import ir.ea2.kotlin_livedata.data.remote.model.NoteResponse
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ApiService {
     //`note` is Continue Of BASE_URL.
@@ -23,5 +20,8 @@ interface ApiService {
 
     @GET("category")
     fun getCategories() : Call<CategoriesResponse>
+
+    @POST("note")
+    fun saveNote(@Body note:Note):Call<Void>
 
 }
