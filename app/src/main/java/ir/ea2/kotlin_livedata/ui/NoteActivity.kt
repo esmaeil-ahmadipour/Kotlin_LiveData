@@ -44,8 +44,8 @@ class NoteActivity : AppCompatActivity() {
                                 note.categories.forEach {
                                     categoryTxt.append(it.title + "  ")
                                 }
-                                updateVisibility(View.INVISIBLE, View.INVISIBLE, View.VISIBLE)
                             }
+                            updateVisibility(View.INVISIBLE, View.INVISIBLE, View.VISIBLE)
                         }
                     }
                 })

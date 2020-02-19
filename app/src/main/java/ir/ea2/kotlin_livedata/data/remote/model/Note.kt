@@ -7,11 +7,11 @@ data class Note(
     @SerializedName("id")
     val id: Long,
     @SerializedName("title")
-    val title: String,
+    var title: String,
     @SerializedName("body")
-    val body: String,
+    var body: String,
     @SerializedName("dateTime")
-    val dateTime: String,
+    var dateTime: String,
     @SerializedName("categories")
-    val categories: List<Category>
+    var categories: List<Category>
 ): Serializable

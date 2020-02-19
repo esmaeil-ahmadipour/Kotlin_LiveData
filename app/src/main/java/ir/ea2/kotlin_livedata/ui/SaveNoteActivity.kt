@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_save_note.*
 
 class SaveNoteActivity : AppCompatActivity() {
     private lateinit var note: Note
+    private lateinit var state: String
     private val category: MutableList<Category> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,21 +25,21 @@ class SaveNoteActivity : AppCompatActivity() {
         setContentView(R.layout.activity_save_note)
 
         val bundle = intent.extras
-        val state = bundle?.getString(AppConstants.STATE_KEY)
+         state = bundle?.getString(AppConstants.STATE_KEY).toString()
 
         if (state == AppConstants.UPDATE_STATE) {
-            note = bundle.getSerializable(AppConstants.NOTE_KEY) as Note
+            note = bundle?.getSerializable(AppConstants.NOTE_KEY) as Note
             ac_save_titleEditTxt.text.append(note.title)
             ac_save_bodyEditTxt.text.append(note.body)
         }
         sendCategoriesRequest()
         ac_save_saveBtn.setOnClickListener( View.OnClickListener {
-            saveOnClickListener()
+            saveOnClickListener(state)
         })
 
     }
 
-    private fun saveOnClickListener() {
+    private fun saveOnClickListener(state: String?) {
         category.clear()
         ac_save_checkboxContainer.children.forEach {
             if ((it as CheckBox).isChecked) {
@@ -46,17 +47,41 @@ class SaveNoteActivity : AppCompatActivity() {
 
             }
         }
-        val note = Note(
-            0, ac_save_titleEditTxt.text.toString(), ac_save_bodyEditTxt.text.toString(),
-            "", category
-        )
-        saveNoteRequest(note)
+
+        when(state){
+            AppConstants.UPDATE_STATE->{
+                note.title=ac_save_titleEditTxt.text.toString()
+                note.body=ac_save_bodyEditTxt.text.toString()
+                note.categories=category
+                note.dateTime=""
+                updateNoteRequest(note)
+            }
+            AppConstants.CREATE_STATE->{
+                this.note = Note(
+                    0, ac_save_titleEditTxt.text.toString(), ac_save_bodyEditTxt.text.toString(),
+                    "", category
+                )
+                saveNoteRequest(note)
+            }
+        }
+
+
         this.finish()
     }
 
     private fun saveNoteRequest(note: Note) {
         if (NetworkUtil.isInternetAvailable(this)) {
             AppRepository.getInstance().saveNote(note).observe(this, Observer {
+                when (it.status) {
+                    AppStatus.ERROR -> ac_save_resultTxt.text = it.message
+                    AppStatus.SUCCESS -> ac_save_resultTxt.text = AppConstants.SUCCESSFUL_MESSAGE
+                }
+            })
+        }
+    }
+    private fun updateNoteRequest(note: Note) {
+        if (NetworkUtil.isInternetAvailable(this)) {
+            AppRepository.getInstance().updateNote(note).observe(this, Observer {
                 when (it.status) {
                     AppStatus.ERROR -> ac_save_resultTxt.text = it.message
                     AppStatus.SUCCESS -> ac_save_resultTxt.text = AppConstants.SUCCESSFUL_MESSAGE
@@ -86,6 +111,11 @@ class SaveNoteActivity : AppCompatActivity() {
                                     val chkBox = CheckBox(this)
                                     chkBox.id = it.id.toInt()
                                     chkBox.text = it.title
+                                    if(state==AppConstants.UPDATE_STATE){
+                                        if(note.categories.contains(it)){
+                                            chkBox.isChecked=true
+                                        }
+                                    }
                                     ac_save_checkboxContainer.addView(chkBox)
                                 }
                                 updateVisibility(View.INVISIBLE, View.INVISIBLE, View.VISIBLE)

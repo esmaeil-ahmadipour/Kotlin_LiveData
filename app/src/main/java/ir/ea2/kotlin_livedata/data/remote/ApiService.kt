@@ -24,4 +24,7 @@ interface ApiService {
     @POST("note")
     fun saveNote(@Body note:Note):Call<Void>
 
+    //Why return Void ? Because Response Body Is Empty.
+    @PUT("note/{id}")
+    fun updateNote(@Body note:Note,@Path("id")id:Long):Call<Void>
 }
