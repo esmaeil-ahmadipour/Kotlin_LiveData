@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     private fun setRecyclerView(notes: List<Note>) {
         if (adapter == null) {
             mainRecyclerView.layoutManager = LinearLayoutManager(this)
-            adapter = RecyclerAdapter(notes.toMutableList())
+            adapter = RecyclerAdapter(notes.toMutableList(),this)
             mainRecyclerView.adapter = adapter
         } else {
             adapter?.refreshData(notes)

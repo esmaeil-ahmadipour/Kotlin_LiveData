@@ -27,4 +27,8 @@ interface ApiService {
     //Why return Void ? Because Response Body Is Empty.
     @PUT("note/{id}")
     fun updateNote(@Body note:Note,@Path("id")id:Long):Call<Void>
+
+    //Use This fun In AppRepository.
+    @DELETE("note/{id}")
+    fun deleteNote(@Path("id") id:Long):Call<Void>
 }

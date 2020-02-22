@@ -175,4 +175,24 @@ class AppRepository private constructor() {
         })
         return responseResult
     }
+
+    //Use this fun In The Adapter !
+    fun deleteNote(note: Note): MutableLiveData<Resource<Void>> {
+        val responseResult: MutableLiveData<Resource<Void>> = MutableLiveData()
+        responseResult.value = Resource.loading()
+        RetrofitService.apiService.deleteNote(note.id).enqueue(object : Callback<Void> {
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                responseResult.value = Resource.error(AppConstants.FAILED_MESSAGE, null)
+            }
+
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    responseResult.value= Resource.success(null)
+                } else {
+                    responseResult.value= Resource.error(AppConstants.ERROR_MESSAGE,null)
+                }
+            }
+        })
+        return responseResult
+    }
 }
