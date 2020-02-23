@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import ir.ea2.kotlin_livedata.AppConstants
 import ir.ea2.kotlin_livedata.data.remote.Resource
 import ir.ea2.kotlin_livedata.data.remote.RetrofitService
-import ir.ea2.kotlin_livedata.data.remote.model.CategoriesResponse
+import ir.ea2.kotlin_livedata.data.remote.model.Category
+import ir.ea2.kotlin_livedata.data.remote.model.DataResponse
 import ir.ea2.kotlin_livedata.data.remote.model.Note
-import ir.ea2.kotlin_livedata.data.remote.model.NoteResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,11 +24,11 @@ class AppRepository private constructor() {
         }
     }
 
-    fun getNotes(title: String): MutableLiveData<Resource<NoteResponse>> {
+    fun getNotes(title: String): MutableLiveData<Resource<DataResponse<Note>>> {
         //For Pass Result Of This Thread , Using ObserverPattern In LiveData.
         //Because Need Change Data , We Using MutableLiveData.
 
-        var responseResult: MutableLiveData<Resource<NoteResponse>> = MutableLiveData()
+        var responseResult: MutableLiveData<Resource<DataResponse<Note>>> = MutableLiveData()
         //Set Default Value For : When Response Not Switched Between Failure Or Success.
         responseResult.value = Resource.loading()
 
@@ -38,24 +38,24 @@ class AppRepository private constructor() {
         //Method enqueue() : Use For Create Enqueue Of Request.After Any Callback Get Answer, GoTo Next Request.
         //For Create Request Using Callback interface and Implemented Method's.
         RetrofitService.apiService.getNote(title, deviceSDKVersion)
-            .enqueue(object : Callback<NoteResponse> {
+            .enqueue(object : Callback<DataResponse<Note>> {
 
                 //Any Request Have Two State: RequestHasError Or RequestIsOk .
                 //onFailure : RequestHasError And Detail's Available In Throwable Variable.
 
-                override fun onFailure(call: Call<NoteResponse>, t: Throwable) {
+                override fun onFailure(call: Call<DataResponse<Note>>, t: Throwable) {
 
                     responseResult.value = Resource.error(AppConstants.FAILED_MESSAGE, null)
                 }
 
                 //onResponse : RequestIsOk And Detail's Available In Response Variable.
                 override fun onResponse(
-                    call: Call<NoteResponse>,
-                    response: Response<NoteResponse>
+                    call: Call<DataResponse<Note>>,
+                    response: Response<DataResponse<Note>>
                 ) {
                     if (response.isSuccessful) {
                         //Set Response Data To MutableLiveData Variable.
-                        if (response.body()?.notes == null) {
+                        if (response.body()?.data == null) {
                             responseResult.value =
                                 Resource.error(AppConstants.DATA_ERROR_MESSAGE, null)
                         } else {
@@ -108,20 +108,20 @@ class AppRepository private constructor() {
         return responseResult
     }
 
-    fun getCategories(): MutableLiveData<Resource<CategoriesResponse>> {
-        var responseResult: MutableLiveData<Resource<CategoriesResponse>> = MutableLiveData()
+    fun getCategories(): MutableLiveData<Resource<DataResponse<Category>>> {
+        var responseResult: MutableLiveData<Resource<DataResponse<Category>>> = MutableLiveData()
         responseResult.value = Resource.loading()
-        RetrofitService.apiService.getCategories().enqueue(object : Callback<CategoriesResponse> {
-            override fun onFailure(call: Call<CategoriesResponse>, t: Throwable) {
+        RetrofitService.apiService.getCategories().enqueue(object : Callback<DataResponse<Category>> {
+            override fun onFailure(call: Call<DataResponse<Category>>, t: Throwable) {
                 responseResult.value = Resource.error(AppConstants.FAILED_MESSAGE, null)
             }
 
             override fun onResponse(
-                call: Call<CategoriesResponse>,
-                response: Response<CategoriesResponse>
+                call: Call<DataResponse<Category>>,
+                response: Response<DataResponse<Category>>
             ) {
                 if (response.isSuccessful) {
-                    if (response.body()?.categories == null) {
+                    if (response.body()?.data == null) {
                         responseResult.value = Resource.error(AppConstants.DATA_ERROR_MESSAGE, null)
                     } else {
                         responseResult.value = Resource.success(response.body())
@@ -194,5 +194,28 @@ class AppRepository private constructor() {
             }
         })
         return responseResult
+    }
+
+    fun registerUser(email: String, password: String): MutableLiveData<Resource<Void>> {
+        var result: MutableLiveData<Resource<Void>> = MutableLiveData();
+        result.value = Resource.loading()
+        if (email.equals("") || password.equals("")) {
+            result.value = Resource.error(AppConstants.REGISTER_ERROR_MESSAGE, null)
+        }else{
+            RetrofitService.apiService.signup(email, password).enqueue(object : Callback<Void>{
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    result.value= Resource.error(AppConstants.ERROR_MESSAGE,null)
+                }
+
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful){
+                        result.value= Resource.success(null)
+                    }else{
+                        result.value= Resource.error(AppConstants.ERROR_MESSAGE,null)
+                    }
+                }
+            })
+        }
+        return result
     }
 }

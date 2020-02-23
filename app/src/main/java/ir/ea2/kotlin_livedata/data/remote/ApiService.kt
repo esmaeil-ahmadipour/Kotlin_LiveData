@@ -1,8 +1,8 @@
 package ir.ea2.kotlin_livedata.data.remote
 
-import ir.ea2.kotlin_livedata.data.remote.model.CategoriesResponse
+import ir.ea2.kotlin_livedata.data.remote.model.Category
 import ir.ea2.kotlin_livedata.data.remote.model.Note
-import ir.ea2.kotlin_livedata.data.remote.model.NoteResponse
+import ir.ea2.kotlin_livedata.data.remote.model.DataResponse
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -13,13 +13,13 @@ interface ApiService {
     //With @Header We Can Set HeaderValue For Response And Sending For Server.
 
     @GET("note")
-    fun getNote(@Query("title") title:String , @Header("deviceApiSdk") deviceApiSdk:String): Call<NoteResponse>
+    fun getNote(@Query("title") title:String , @Header("deviceApiSdk") deviceApiSdk:String): Call<DataResponse<Note>>
 
     @GET("note/{id}")
     fun getNoteDetail(@Path("id")id:Long):Call<Note>
 
     @GET("category")
-    fun getCategories() : Call<CategoriesResponse>
+    fun getCategories() : Call<DataResponse<Category>>
 
     @POST("note")
     fun saveNote(@Body note:Note):Call<Void>
@@ -31,4 +31,8 @@ interface ApiService {
     //Use This fun In AppRepository.
     @DELETE("note/{id}")
     fun deleteNote(@Path("id") id:Long):Call<Void>
+
+    @FormUrlEncoded
+    @POST("user/register")
+    fun signup(@Field("email") email:String ,@Field("password") password:String):Call<Void>
 }

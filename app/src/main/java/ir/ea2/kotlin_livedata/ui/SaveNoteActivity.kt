@@ -106,8 +106,8 @@ class SaveNoteActivity : AppCompatActivity() {
                         }
                         AppStatus.SUCCESS -> {
                             val category = it.data
-                            if (category!!.categories.isNotEmpty()) {
-                                category.categories.forEach {
+                            if (category!!.data.isNotEmpty()) {
+                                category.data.forEach {
                                     val chkBox = CheckBox(this)
                                     chkBox.id = it.id.toInt()
                                     chkBox.text = it.title

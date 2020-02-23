@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                         }
                         AppStatus.SUCCESS -> {
                             updateVisibility(View.INVISIBLE, View.INVISIBLE, View.VISIBLE)
-                            setRecyclerView(it.data!!.notes)
+                            setRecyclerView(it.data!!.data)
                         }
                     }
                 })

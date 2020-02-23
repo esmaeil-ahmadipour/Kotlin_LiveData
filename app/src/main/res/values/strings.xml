@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Kotlin_LiveData</string>
     <string name="searchBar_hint_txt">Do SomeThings!</string>
+    <string name="email_hint_edt">Email Address..</string>
+    <string name="password_hint_edt">Password..</string>
+    <string name="signup_title_btn">SIGNUP</string>
 </resources>
